@@ -35,8 +35,8 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log In <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="signin.php">User Login</a></li>
-                    <li><a href="signin.php">Store Login</a></li>
+                    <li><a href="index.php?select=signin">User Login</a></li>
+                    <li><a href="index.php?select=signin">Store Login</a></li>
                   </ul>
                 </li>
                 <?php

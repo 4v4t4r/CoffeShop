@@ -2,13 +2,8 @@
 	width:400px;;
 	height:400px;
 	padding:30px;
-	background-color:#e6e6e6;
 	border-radius: 1em;
 	margin-top:30px;
-}
-
-body{
-	background-color:#bfbfbf;
 }
 #account_body{
 	width:100%;
@@ -53,3 +48,32 @@ body{
 	text-align:center;
 	padding:5px;
 }
+
+#stockdata{
+	width:50%;
+	height:100%;
+	margin:0px auto;
+	padding:10px;
+	text-align:center;
+}
+
+table{
+	width:50%;
+	padding:10px;
+	margin:0px auto;
+}
+
+th, td{
+	width:25px;
+	border:solid 1px gray;
+	padding:5px;
+}
+.tabBean{
+	width:200px;
+	text-align:left;
+}
+
+#boxcontainFooter{
+	height:100%;
+}
+

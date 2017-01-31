@@ -124,8 +124,41 @@ if(!isset($_SESSION['USERNAME'])){
 	
 	<!-- Items time -->
 	<div class="container">
-		<div class="boxcontain">
-
+		<div class="boxcontain" id="boxcontainFooter">
+			<div id="stockdata">
+				<h3>Stocks Data</h3>
+				<?php
+						include 'template/connection.php';
+						$query = "SELECT BEAN, PRICE, QUANTITY FROM stock";
+			
+						$result = mysqli_query($connection, $query);
+						$count = mysqli_num_rows($result);
+						if($count == 0){
+							echo "<h5>No Stocks Found</h5>";
+						}else{	
+							echo '<div id="stocktable"><table>';
+							echo '<tr >'. '<th>' . "S.No" . '</th>' .
+										'<th class="tabBean">' . "Bean" . '</th>' . 
+										'<th>' . "Price" . '</th>' . 
+										'<th>' . "Quantity" . '</th>' . 
+							'</tr>';
+							$sno = 0;	
+							while ($row = mysqli_fetch_assoc($result)) {
+								$sno = $sno+1;
+								$sbean = $row['BEAN'];
+								$sprice = $row['PRICE'];
+								$squan = $row['QUANTITY'];
+								echo "<tr>
+								<td>$sno</td>
+								<td class='tabBean'>$sbean</td>
+								<td>$sprice</td>
+								<td>$squan</td>						
+								</tr>";
+							}
+							echo '</table></div>';
+						}
+			     ?>
+			</div>
 		</div>
 	</div>
   </body>
