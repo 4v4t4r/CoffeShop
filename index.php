@@ -1,5 +1,8 @@
 <?php
 session_start();
+if(!isset($_GET['select'])){
+	header('location:index.php?select=home');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,16 +27,63 @@ session_start();
       <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
       </ol>
+      <?php
+      		
+      	include 'template/connection.php';	
+		$stockHigh = "SELECT QUANTITY, BEAN FROM stock ORDER BY QUANTITY DESC";
+		$res = mysqli_query($connection, $stockHigh);
+		$arr = array();
+		while($row = mysqli_fetch_assoc($res)){							
+			array_push($arr, $row);						
+	    }	
+		$num = 0;
+		$numCount = count($arr);	
+		foreach($arr as $r){
+			if($num == 0){
+				$timequantity = $r['QUANTITY'];
+				$timebean = $r['BEAN'];	
+			}else if($num == $numCount - 1){
+				$quantity = $r['QUANTITY'];
+				$bean = $r['BEAN'];				
+			}	
+			$num++;									
+		}
+		$query ="SELECT START_TIME, END_TIME FROM promo";
+		$result = mysqli_query($connection, $query);
+		while($row = mysqli_fetch_assoc($result))
+		{
+			$start = $row['START_TIME'];
+			$end = $row['END_TIME'];
+			date_default_timezone_set("Europe/London");
+			$current_time = date("H:i:s");
+			if($current_time >= $start && $current_time <= $end ){
+				$beaninfo = "SELECT * FROM bean WHERE BEAN='$timebean'";
+				$beaninfoExec = mysqli_query($connection, $beaninfo);
+				while($row = mysqli_fetch_assoc($beaninfoExec)){
+				   //Within Time Promotion	
+				   carousel($row['BEAN'],$row['INFO'],"Coffee of the Day : <code>". $row['BEAN']."</code>", "20% Offer");
+				}
+			}else{
+				$beaninfo = "SELECT * FROM bean WHERE BEAN='$bean'";
+				$beaninfoExec = mysqli_query($connection, $beaninfo);
+				while($row = mysqli_fetch_assoc($beaninfoExec)){
+				   carousel($row['BEAN'],$row['INFO'],$row['BEAN'],"Our quick moving product, Hurry");
+				}	
+			}
+		}
+		
+		function carousel($fbean, $finfo,$foffer, $fquote)
+		{		
+      ?>
       <div class="carousel-inner" role="listbox">
         <div class="item active">
           <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
           <div class="container">
             <div class="carousel-caption">
-              <h1>Example headline.</h1>
-              <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+              <h1><?php echo $foffer; ?></h1>
+              <p><?php echo $finfo; ?></p>
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Buy Now</a></p>
             </div>
           </div>
         </div>
@@ -41,19 +91,9 @@ session_start();
           <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
           <div class="container">
             <div class="carousel-caption">
-              <h1>Another example headline.</h1>
-              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>One more for good measure.</h1>
-              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+              <h1><?php echo $fbean; ?></h1>
+              <p><?php echo $fquote; ?></p>
+              <p><a class="btn btn-lg btn-primary" href="#" role="button">Buy Now</a></p>
             </div>
           </div>
         </div>
@@ -67,7 +107,9 @@ session_start();
         <span class="sr-only">Next</span>
       </a>
     </div><!-- /.carousel -->
-
+	<?php
+	}
+	?>
 
     <!-- Marketing messaging and featurettes
     ================================================== -->
@@ -93,71 +135,28 @@ session_start();
         <div class="col-lg-4">
           <img class="img-circle" src="image/drink1.png" alt="Generic placeholder image" width="140" height="140">
           <h2>Congo Coffee</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p>Congo Coffee is a species of Coffea originally indigenous to the forests of the south western highlands of Ethiopia. It is also known as the "coffee shrub of Arabia", "mountain coffee", or "arabica coffee". C. arabica is believed to be the first species of coffee to be cultivated, and is by far the dominant cultivar, representing some 70% of global production.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="image/drink1.png" alt="Generic placeholder image" width="140" height="140">
           <h2>Coffea Liberica</h2>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+          <p>Coffea liberica (or Liberian coffee) is a species of flowering plant in the Rubiaceae family. It is a coffee that is native to western and central Africa from Liberia to Uganda and Angola. It is also naturalized in the Seychelles, the Andaman & Nicobar Islands, French Polynesia, Central America, the West Indies, Venezuela, Colombia and Brazil.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="image/drink1.png" alt="Generic placeholder image" width="140" height="140">
           <h2>Coffea Stenophylla</h2>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+          <p>Coffea Stenophylla is coffee made from the Coffea canephora plant, a sturdy species of coffee bean with low acidity and high bitterness. C. canephora beans (widely known by the synonym Coffea robusta) are used primarily in instant coffee, espresso, and as a filler in ground coffee blends.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
 
-      <!-- START THE FEATURETTES -->
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7 col-md-push-5">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5 col-md-pull-7">
-          <img class="featurette-image img-responsive center-block" src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <!-- /END THE FEATURETTES -->
-
-
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        <p>&copy; 2016 Coffee Shop Ltd. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
 
     </div><!-- /.container -->

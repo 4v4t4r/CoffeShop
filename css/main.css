@@ -45,3 +45,11 @@ body{
 #btnId{
 	width:100%;	
 }
+
+#promotime{
+	margin:0px auto;
+	width:50%;
+	height:100%;
+	text-align:center;
+	padding:5px;
+}
