@@ -1,3 +1,10 @@
+<?php session_start(); 
+
+if(!isset($_SESSION['USERNAME'])){
+	header('location:index.php');
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,32 +32,39 @@
  						 <span class="input-group-addon" id="basic-addon1">@</span>
   						 <input type="text" class="form-control" aria-describedby="basic-addon1" name="password" placeholder="Password">
 					</div>	</br>
-					<button type="button" class="btn btn-success" id="btnId" name="submit">Add User</button>				
+					<input type="submit" class="btn btn-success" id="btnId" name="submit" value="Add User"/>		
 				</form>
 			</br>
 			<button class="btn btn-danger" type="button">
-  				Total User <span class="badge">4</span>
+  				Total User <span class="badge"><?php 
+  						include 'template/connection.php';
+						$query ="SELECT USERNAME FROM users";
+						$result = mysqli_query($connection, $query);
+						$num = mysqli_num_rows($result);
+						echo $num;
+  					?></span>
 			</button>
 			</div>
 				<?php
 					if(isset($_POST['submit'])){
 						if(isset($_POST['username']) && isset($_POST['password']))
 						{
-							session_start();
 							$username = htmlentities(trim($_POST['username']));
 							$password = htmlentities(trim($_POST['password']));
 							
 							$hash = md5($password."coffeshop");
 							
-							include 'connection.php';
+							include 'template/connection.php';
 							$query ="INSERT INTO users (USERNAME, PASSWORD) VALUES ('$username','$hash')";
-							echo $query;
 							$result = mysqli_query($connection, $query);
 							if($result){
-								echo "User Successfully Created";
+								$message = "User Successfully Created";
+								header('location:account.php');
 							}else{
-								echo "User created failed";
+								$message = "User created failed";
+								header('location:account.php');
 							}
+							
 						}	
 					}	
 				?>

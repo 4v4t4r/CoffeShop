@@ -8,7 +8,7 @@ if(isset($_POST['submit'])){
 		$username = htmlentities(trim($_POST['username']));
 		$password = htmlentities(trim($_POST['password']));
 		
-		$hash = md5($password."virudhunagar");
+		$hash = md5($password."coffeshop");
 		
 		include 'connection.php';
 		$query = "SELECT * FROM users WHERE USERNAME='$username' AND PASSWORD='$hash'";
@@ -23,11 +23,11 @@ if(isset($_POST['submit'])){
 				
 				$_SESSION['USERNAME'] = $user;
 				$_SESSION['ACCESS'] = $auth;
-				header('location:../home.php');
+				header('location:../account.php?select=account');
 			}	
 		}else{
 			$_SESSION['error'] = "Incorrect Username and Password";
-			header('location:../index.php');
+			header('location:../index.php?select=home');
 		}		
 	}
 }						
